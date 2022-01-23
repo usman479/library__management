@@ -51,7 +51,7 @@ int main()
 	}
 	fclose(my_books);
 
-	i = input = 1;
+	i  = input = 1;
 
 	// Iterate the loop
 	while (input != 0)

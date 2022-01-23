@@ -46,7 +46,7 @@ void addBooks(int i)
     my_books = fopen("books.txt", "ab");
     fwrite(&lib[i], sizeof(struct library), 1, my_books);
     fclose(my_books);
-    counts = fopen("C:\\Users\\DELL\\Desktop\\pf project\\counts.bin", "wb");
+    counts = fopen("counts.bin", "wb");
     count++;
     putw(count, counts);
     fclose(counts);
