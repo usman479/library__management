@@ -133,7 +133,7 @@ void deleteBook()
 
 void setCount()
 {
-	counts = fopen("C:\\Users\\DELL\\Desktop\\pf project\\counts.bin", "wb");
+	counts = fopen("counts.bin", "wb");
 	count--;
 	count = putw(count, counts);
 	fclose(counts);

@@ -32,13 +32,13 @@ int count = 0;
 // Driver Code
 int main()
 {
-// setCount();
+
 	// Keep the track of the number of
 	// of books available in the library
 	int i = 0, input;
 
 	// Sets the counts of book from file
-	counts = fopen("C:\\Users\\DELL\\Desktop\\pf project\\counts.bin", "rb");
+	counts = fopen("counts.bin", "rb");
 	count = getw(counts);
 	fclose(counts);
 
