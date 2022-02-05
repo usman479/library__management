@@ -3,7 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<stdbool.h>  
+#include <stdbool.h>
+#include <conio.h>
+#include <ctype.h>
+#define ENTER 13
+#define TAB 9
+#define BKSP 8
+#define SPACE 32
 
 // Create Structure of Library
 struct library
@@ -15,88 +21,46 @@ struct library
 	float price;
 };
 
+// Create Structure of Users
+struct members
+{
+	char user_email[20];
+	char user_name[20];
+	char user_password[20];
+	char status;
+};
+
 // >>  GLOBAL VARIABLES  << //
 // Create a instance
 struct library lib[100];
+struct members users[100];
 // Create file pointer for books
 FILE *my_books;
 // Create file pointer for counts
 FILE *counts;
+// Create file pointer for users
+FILE *my_users;
+// Create file pointer for usercounts
+FILE *user_counts;
 FILE *temporary;
 int count = 0;
-
-// Importing functions from other file //
+int counts_of_user = 0;
+char password[20];
 #include "myFunctions.h"
 
+// Importing functions from other file //
 
 // Driver Code
 int main()
 {
 
-	// Keep the track of the number of
-	// of books available in the library
-	int i = 0, input;
+	
 
-	// Sets the counts of book from file
-	counts = fopen("counts.bin", "rb");
-	count = getw(counts);
-	fclose(counts);
+	// Initialize and get all values from files
+	initialize();
 
-	// set books from file into lib array
-	char str[20] = "books.txt";
-	my_books = fopen(str, "rb");
-	for (int i = 0; i < count; i++)
-	{
-	fread(&lib[i], sizeof(struct library), 1, my_books);
-	}
-	fclose(my_books);
+	// Start Our Program
+	start();
 
-	i  = input = 1;
-
-	// Iterate the loop
-	while (input != 0)
-	{
-
-		printOptions();
-
-		// Enter the book details
-		printf("\n\nEnter one of "
-			   "the above: ");
-		scanf("%d", &input);
-
-		// Process the input
-		switch (input)
-		{
-
-		// Add book
-		case 1:
-			addBooks(i);
-			break;
-
-		// Print book information
-		case 2:
-			printBooks(i);
-			break;
-
-		// Take the author name as input
-		case 3:
-			authorBooks(i);
-			break;
-
-		// Print total count
-		case 4:
-			printf("\n No of books in "
-				   "Library : %d",
-				   count);
-			break;
-		case 5:
-			deleteBook();
-			break;
-		case 0:
-			exit(0);
-		}
-	}
 	return 0;
 }
-
-
