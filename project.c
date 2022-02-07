@@ -10,11 +10,12 @@
 #define TAB 9
 #define BKSP 8
 #define SPACE 32
+#define DOT 46
 
 // Create Structure of Library
 struct library
 {
-	char book_name[20];
+	char book_name[50];
 	char author[20];
 	char category[20];
 	int pages;
@@ -53,9 +54,7 @@ char password[20];
 // Driver Code
 int main()
 {
-
-	
-
+	system("cls");
 	// Initialize and get all values from files
 	initialize();
 

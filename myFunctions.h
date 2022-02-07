@@ -1,13 +1,12 @@
-
 // Function Declarations //
 void printOptions();
-void addBooks(int);
+int addBooks(int);
 void printBooks(int);
 void authorBooks(int);
-void deleteBook();
+void removeBook();
 void setCount();
 void renderArray();
-void addUser(int);
+int addUser(int);
 void showUsers(int);
 void adminOptions();
 void userOptions();
@@ -16,14 +15,18 @@ void initialize();
 void passwordGetting();
 void start();
 void searchBook();
-// uncomlpete
+bool verifyEmail(char str[]);
+bool nameValidator(char str[]);
+void removeUser();
+void setUsersCount();
 
 // Function Definitions //
+
 void printOptions()
 {
        printf("\n\n********######"
               "WELCOME TO E-LIBRARY "
-              "#####********\n");
+              "#####********\n\n");
        printf("\n\n1. Add book infor"
               "mation\n2. Display "
               "book information\n");
@@ -34,27 +37,73 @@ void printOptions()
            "s in the library\n");
        printf("5. Remove Book\n");
        printf("6. Add User\n");
-       printf("7. Show Users\n");
-       printf("8. Sign Out\n");
+       printf("7. Remove User\n");
+       printf("8. Show Users\n");
+       printf("9. Sign Out\n");
        printf("0. Exit\n");
 }
 
-void addBooks(int i)
+bool nameValidator(char str[])
 {
+       bool flag = true;
+
+       for (int i = 0; i < strlen(str); i++)
+       {
+              if (isdigit(str[i]) == 0 && (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == SPACE || str[i] == DOT)
+              {
+                    flag = false; 
+              } else{
+                     flag = true;
+                     break;
+              }
+       }
+       return flag;
+}
+
+int addBooks(int i)
+{
+
+       // welcomeHead();
        printf("Enter book name = ");
        scanf(" %[^\n]s", lib[i].book_name);
 
        printf("Enter author name = ");
        scanf(" %[^\n]s", lib[i].author);
+       if (nameValidator(lib[i].author))
+       {
+              printf("Invalid Input");
+              return 0;
+       }
 
        printf("Enter category = ");
        scanf(" %[^\n]s", lib[i].category);
+       if (nameValidator(lib[i].category))
+       {
+
+              printf("Invalid Input");
+              fflush(stdin);
+              return 0;
+       }
 
        printf("Enter pages = ");
-       scanf("%d", &lib[i].pages);
+       if (0 == scanf("%d", &lib[i].pages))
+       {
+
+              printf("Invalid input\n");
+              fflush(stdin);
+              return 0;
+       }
+       fflush(stdin);
 
        printf("Enter price = ");
-       scanf("%f", &lib[i].price);
+       if (0 == scanf("%f", &lib[i].price))
+       {
+
+              printf("Invalid input\n");
+              fflush(stdin);
+              return 0;
+       }
+       fflush(stdin);
 
        my_books = fopen("books.txt", "ab");
        fwrite(&lib[i], sizeof(struct library), 1, my_books);
@@ -67,7 +116,8 @@ void addBooks(int i)
 
 void printBooks(int i)
 {
-       printf("you have entered"
+
+       printf("\nyou have entered"
               " the following "
               "information\n");
        renderArray();
@@ -86,21 +136,22 @@ void printBooks(int i)
               printf("\t pages = %d",
                      lib[i].pages);
 
-              printf("\t price = %f\n",
+              printf("\t price = %.1f\n",
                      lib[i].price);
        }
 }
 
 void authorBooks(int i)
 {
+
        char ar_nm[30];
        printf("Enter author name : ");
-       scanf("%s", ar_nm);
+       scanf(" %[^\n]s", ar_nm);
        for (i = 0; i < count; i++)
        {
 
               if (strcmp(ar_nm, lib[i].author) == 0)
-                     printf("Book Name: %s Author: %s Category: %s Pages: %d Price: %f\n",
+                     printf("Book Name: %s Author: %s Category: %s Pages: %d Price: %.1f\n",
                             lib[i].book_name,
                             lib[i].author,
                             lib[i].category,
@@ -109,8 +160,9 @@ void authorBooks(int i)
        }
 }
 
-void deleteBook()
+void removeBook()
 {
+
        bool flag = false;
        char bk_nm[20];
        printf("Enter Book name to remove: ");
@@ -152,6 +204,14 @@ void setCount()
        fclose(counts);
 }
 
+void setUsersCount()
+{
+       user_counts = fopen("usersCount.bin", "wb");
+       counts_of_user--;
+       counts_of_user = putw(counts_of_user, user_counts);
+       fclose(user_counts);
+}
+
 void renderArray()
 {
        char str[20] = "books.txt";
@@ -174,19 +234,75 @@ void renderArrayUsers()
        fclose(my_users);
 }
 
-void addUser(int i)
+void removeUser()
+{
+
+       bool flag = false;
+       char userEmail[20];
+       printf("Enter User email to remove: ");
+       scanf(" %s", userEmail);
+
+       char originalName[50] = "users.txt";
+       char temp[50] = "temp.txt";
+       temporary = fopen(temp, "ab");
+
+       for (int i = 0; i < counts_of_user; i++)
+       {
+              if (strcmp(userEmail, users[i].user_email) != 0)
+              {
+                     fwrite(&users[i], sizeof(struct members), 1, temporary);
+              }
+              else
+              {
+                     printf("%s User Removed", userEmail);
+
+                     flag = true;
+              }
+       }
+       fclose(temporary);
+
+       remove(originalName);
+       rename(temp, originalName);
+       if (flag)
+       {
+              setUsersCount();
+              renderArrayUsers();
+       }
+       else
+       {
+              printf("\nThe user you entered is not a member\n");
+       }
+}
+
+int addUser(int i)
 {
        printf("Enter Name = ");
        scanf(" %[^\n]s", users[i].user_name);
+       if (nameValidator(users[i].user_name))
+       {
+              printf("Invalid Input");
+              return 0;
+       }
 
        printf("Enter Email = ");
        scanf(" %[^\n]s", users[i].user_email);
+       if (!verifyEmail(users[i].user_email))
+       {
+              printf("\nInvalid Pattern eg.\"xyz@email.com\"");
+              return 0;
+       }
 
-       printf("Enter Password = ");
-       scanf(" %[^\n]s", users[i].user_password);
+       passwordGetting();
+       strcpy(users[i].user_password, password);
 
-       printf("Enter Status = ");
+       printf("\nEnter Status = ");
        scanf(" %c", &users[i].status);
+       if (users[i].status != 'a' && users[i].status != 'u')
+       {
+
+              printf("Invalid Input");
+              return 0;
+       }
 
        my_users = fopen("users.txt", "ab");
        fwrite(&users[i], sizeof(struct members), 1, my_users);
@@ -224,15 +340,23 @@ void adminOptions()
        int input = 1;
        int i = 1;
        // Iterate the loop
+       // welcomeHead();
+       printf("\n********** Logged In **********\n");
        while (input != 0)
        {
-
               printOptions();
 
               // Enter the book details
               printf("\n\nEnter one of "
                      "the above: ");
-              scanf("%d", &input);
+
+              if (0 == scanf("%d", &input))
+              {
+                     printf("Invalid input\n");
+                     fflush(stdin);
+                     continue;
+              }
+              fflush(stdin);
 
               // Process the input
               switch (input)
@@ -260,15 +384,18 @@ void adminOptions()
                             count);
                      break;
               case 5:
-                     deleteBook();
+                     removeBook();
                      break;
               case 6:
                      addUser(i);
                      break;
               case 7:
-                     showUsers(i);
+                     removeUser();
                      break;
               case 8:
+                     showUsers(i);
+                     break;
+              case 9:
                      start();
                      break;
               case 0:
@@ -281,28 +408,30 @@ void userOptions()
 {
        int input = 1;
        int i = 1;
-       printf("\n\n********######"
-              "WELCOME TO E-LIBRARY "
-              "#####********\n");
-       printf("1. Display "
-              "book information\n");
-       printf("2. List all books of "
-              "given author\n");
-       printf("3. Search Book by Name \n");
-       printf(
-           "4. List the count of book"
-           "s in the library\n");
-       printf("5. Go Back\n");
-       printf("0. Exit\n");
-
        // Iterate the loop
        while (input != 0)
        {
 
+              printf("1. Display "
+                     "book information\n");
+              printf("2. List all books of "
+                     "given author\n");
+              printf("3. Search Book by Name \n");
+              printf(
+                  "4. List the count of book"
+                  "s in the library\n");
+              printf("5. Go Back\n");
+              printf("0. Exit\n");
+
               // Enter the book details
               printf("\n\nEnter one of "
                      "the above: ");
-              scanf("%d", &input);
+              if (0 == scanf("%d", &input))
+              {
+                     printf("\nInvalid Input");
+                     fflush(stdin);
+                     continue;
+              };
 
               // Process the input
               switch (input)
@@ -339,12 +468,53 @@ void userOptions()
        }
 }
 
+bool verifyEmail(char email[])
+{
+       int i, j;
+       char pattern[12] = "@email.com";
+       bool flag = false;
+       bool flag2 = false;
+       for (i = 0; i < strlen(email); i++)
+       {
+              if (email[i] == '@')
+              {
+                     flag = true;
+                     for (j = 0; j < strlen(pattern); j++)
+                     {
+                            if (pattern[j] != email[i])
+                            {
+                                   flag = false;
+                                   flag2 = true;
+                                   break;
+                            }
+                            i++;
+                     }
+              }
+              else
+              {
+                     flag = false;
+              }
+              if (flag2)
+              {
+                     break;
+              }
+       }
+       if (flag)
+       {
+              return true;
+       }
+       else
+       {
+              return false;
+       }
+}
+
 bool authAdmin()
 {
        char email[20];
        // char password[20];
        printf("Enter Email: ");
-       scanf(" %[^\n]s", email);
+       scanf(" %s", email);
 
        passwordGetting();
 
@@ -397,6 +567,7 @@ void passwordGetting()
               }
        }
 }
+
 void initialize()
 {
        // Sets the counts of book from file
@@ -428,7 +599,8 @@ void initialize()
        fclose(my_users);
 }
 
-void start(){
+void start()
+{
        // Keep the track of the number of
        // of books available in the library
        int i = 1, input;
@@ -446,20 +618,21 @@ void start(){
                      fflush(stdin);
                      continue;
               }
-
+              fflush(stdin);
               // Process the input
               switch (input)
               {
               case 1:
                      if (authAdmin())
                      {
-                            printf("\n********** Logged In **********\n");
+
                             adminOptions();
                             break;
                      }
                      else
                      {
-                            printf("UnAuthenticated\n");
+
+                            printf("\nUnAuthenticated\n");
                             break;
                      }
 
@@ -471,7 +644,9 @@ void start(){
                      exit(0);
                      break;
               default:
+
                      printf("Invalid Input\n");
+
                      break;
               }
        }
