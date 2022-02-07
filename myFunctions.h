@@ -51,8 +51,10 @@ bool nameValidator(char str[])
        {
               if (isdigit(str[i]) == 0 && (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == SPACE || str[i] == DOT)
               {
-                    flag = false; 
-              } else{
+                     flag = false;
+              }
+              else
+              {
                      flag = true;
                      break;
               }
@@ -412,7 +414,7 @@ void userOptions()
        while (input != 0)
        {
 
-              printf("1. Display "
+              printf("\n\n1. Display "
                      "book information\n");
               printf("2. List all books of "
                      "given author\n");
