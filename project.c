@@ -11,6 +11,7 @@
 #define BKSP 8
 #define SPACE 32
 #define DOT 46
+#define HYPHEN 45
 
 // Create Structure of Library
 struct library

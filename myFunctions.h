@@ -49,7 +49,7 @@ bool nameValidator(char str[])
 
        for (int i = 0; i < strlen(str); i++)
        {
-              if (isdigit(str[i]) == 0 && (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == SPACE || str[i] == DOT)
+              if (isdigit(str[i]) == 0 && (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == SPACE || str[i] == DOT || str[i] == HYPHEN)
               {
                      flag = false;
               }
