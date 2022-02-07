@@ -476,6 +476,9 @@ bool verifyEmail(char email[])
        char pattern[12] = "@email.com";
        bool flag = false;
        bool flag2 = false;
+       if((strcmp(email,pattern)) == 0) {
+              return true;
+       }
        for (i = 0; i < strlen(email); i++)
        {
               if (email[i] == '@')
