@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <ctype.h>
-#define ENTER 13
+#define ENTER 13  
 #define TAB 9
 #define BKSP 8
 #define SPACE 32

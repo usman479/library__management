@@ -19,6 +19,7 @@ bool verifyEmail(char str[]);
 bool nameValidator(char str[]);
 void removeUser();
 void setUsersCount();
+void renderArrayUsers();
 
 // Function Definitions //
 
@@ -47,7 +48,8 @@ bool nameValidator(char str[])
 {
        bool flag = true;
 
-       for (int i = 0; i < strlen(str); i++)
+       int i;
+       for (i = 0; i < strlen(str); i++)
        {
               if (isdigit(str[i]) == 0 && (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == SPACE || str[i] == DOT || str[i] == HYPHEN)
               {
@@ -174,7 +176,8 @@ void removeBook()
        char temp[50] = "temp.txt";
        temporary = fopen(temp, "ab");
 
-       for (int i = 0; i < count; i++)
+       int i;
+       for (i = 0; i < count; i++)
        {
               if (strcmp(bk_nm, lib[i].book_name) != 0)
               {
@@ -218,7 +221,8 @@ void renderArray()
 {
        char str[20] = "books.txt";
        my_books = fopen(str, "rb");
-       for (int i = 0; i < count; i++)
+       int i;
+       for (i = 0; i < count; i++)
        {
               fread(&lib[i], sizeof(struct library), 1, my_books);
        }
@@ -229,7 +233,8 @@ void renderArrayUsers()
 {
 
        my_users = fopen("users.txt", "rb");
-       for (int i = 0; i < counts_of_user; i++)
+       int i;
+       for (i = 0; i < counts_of_user; i++)
        {
               fread(&users[i], sizeof(struct members), 1, my_users);
        }
@@ -248,7 +253,8 @@ void removeUser()
        char temp[50] = "temp.txt";
        temporary = fopen(temp, "ab");
 
-       for (int i = 0; i < counts_of_user; i++)
+       int i;
+       for (i = 0; i < counts_of_user; i++)
        {
               if (strcmp(userEmail, users[i].user_email) != 0)
               {
@@ -473,11 +479,11 @@ void userOptions()
 bool verifyEmail(char email[])
 {
        int i, j;
-       char pattern[12] = "@email.com";
+       char pattern[12] = "@email.com"; 
        bool flag = false;
        bool flag2 = false;
        if((strcmp(email,pattern)) == 0) {
-              return true;
+              return false;
        }
        for (i = 0; i < strlen(email); i++)
        {
@@ -588,7 +594,8 @@ void initialize()
        // set books from file into lib array
        char str[20] = "books.txt";
        my_books = fopen(str, "rb");
-       for (int i = 0; i < count; i++)
+       int i;
+       for (i = 0; i < count; i++)
        {
               fread(&lib[i], sizeof(struct library), 1, my_books);
        }
@@ -597,7 +604,8 @@ void initialize()
        // set users from file into users array
        // char str[20] = "books.txt";
        my_users = fopen("users.txt", "rb");
-       for (int i = 0; i < counts_of_user; i++)
+       
+       for (i = 0; i < counts_of_user; i++)
        {
               fread(&users[i], sizeof(struct members), 1, my_users);
        }
@@ -662,13 +670,14 @@ void searchBook()
        char input[20];
        bool flag = true;
        printf("Enter Book Name: ");
-       scanf(" %[^\n]s", input);
+       scanf(" %[^\n]s", input); 
        int i = 0;
        // printf("%d",strcmp(input, lib[0].book_name));
        for (i = 0; i < count; i++)
        {
               if ((strcmp(input, lib[i].book_name)) == 0)
               {
+              
                      flag = false;
                      printf("Book Name: %s Author: %s Category: %s Pages: %d Price: %f\n",
                             lib[i].book_name,
@@ -676,11 +685,12 @@ void searchBook()
                             lib[i].category,
                             lib[i].pages,
                             lib[i].price);
-                     break;
-              }
+                     
+              } 
        }
+       
        if (flag)
        {
-              printf("\"%s\" Book is not available");
+              printf("\"%s\" Book is not available",input);
        }
 }
